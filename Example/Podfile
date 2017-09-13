@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'EPCSpinnerView_Example' do
+  pod 'EPCSpinnerView', :path => '../'
+
+  target 'EPCSpinnerView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
