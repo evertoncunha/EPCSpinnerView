@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'EPCSpinnerView'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A simple spinner view that animates to error or success states.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-A simple spinner view that animates to error or success states.
+A simple spinner view that animates to error or success states. Created mostly for testing cocoapods.
                        DESC
 
   s.homepage         = 'https://github.com/evertoncunha/EPCSpinnerView'

@@ -17,7 +17,7 @@ public protocol EPCSpinnerViewProtocol {
   func startAnimating()
 }
 
-public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
+open class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
 
   public enum SpinnerState: Int {
     case loading
@@ -25,7 +25,7 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
     case success
   }
 
-  public let iconSpinner: EPCDrawnIconSpinner
+  open let iconSpinner: EPCDrawnIconSpinner
 
   required public init?(coder aDecoder: NSCoder) {
     fatalError("\(#file) \(#function) not implemented")
@@ -46,7 +46,7 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
     addSubview(iconSpinner)
   }
 
-  public var state: SpinnerState = .loading {
+  open var state: SpinnerState = .loading {
     didSet {
       switch state {
       case .error:
@@ -60,7 +60,13 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
     }
   }
 
-  public func addIcon(_ view: UIView) {
+  fileprivate func prop(_ val: CGFloat) -> CGFloat {
+    return (frame.size.height * val)/180
+  }
+
+  // MARK: - Open
+
+  open func addIcon(_ view: UIView) {
     view.center = CGPoint(
       x: CGFloat(Int(self.frame.size.width/2)),
       y: CGFloat(Int(self.frame.size.height/2))
@@ -75,14 +81,8 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
     ]
     insertSubview(view, at: 0)
   }
-
-  fileprivate func prop(_ val: CGFloat) -> CGFloat {
-    return (frame.size.height * val)/180
-  }
-
-  // MARK: - Public
-
-  public func startAnimating() {
+  
+  open func startAnimating() {
     iconSpinner.start()
   }
 }
