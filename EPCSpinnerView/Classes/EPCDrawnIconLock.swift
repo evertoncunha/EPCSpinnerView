@@ -20,9 +20,10 @@ public class EPCDrawnIconLock: UIView, EPCDrawnIconProtocol {
     fatalError("\(#file) \(#function) not implemented")
   }
 
-  override init(frame: CGRect) {
+  override public init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = UIColor.clear
+    contentMode = .redraw
   }
 
   fileprivate func propH(_ val: CGFloat) -> CGFloat {

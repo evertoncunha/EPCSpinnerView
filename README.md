@@ -21,10 +21,13 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod 'EPCSpinnerView'
 ```
+## Known Issues
+
+ø There's an animation glitch if you resize the view while it is filling the circle to complete or error states.
 
 ## Author
 
-evertoncunha, ever.cunha@gmail.com
+Everton Postay Cunha, ever.cunha@gmail.com
 
 ## License
 

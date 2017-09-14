@@ -70,7 +70,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       value.size.width = maxValue
       value.size.height = maxValue
       super.frame = value
-      layer.cornerRadius = maxValue/2
+      
       lineWidth = prop(11)
     }
     get {
@@ -82,20 +82,23 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     fatalError("\(#file) \(#function) not implemented")
   }
 
-  override init(frame: CGRect) {
+  public override func layoutSubviews() {
+    super.layoutSubviews()
+  }
+  
+  override public init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = UIColor.clear
     clipsToBounds = true
     layer.masksToBounds = true
     contentMode = .redraw
-
   }
 
   override public func draw(_ rect: CGRect) {
     super.draw(rect)
     var ovalPath: UIBezierPath!
     let ovalRect = rect.insetBy(dx: lineWidth/2, dy: lineWidth/2)
-
+    
     if state == .loading {
 
       UIGraphicsGetCurrentContext()?.clear(rect)
@@ -109,11 +112,27 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       }
 
       ovalPath.lineWidth = lineWidth
-
+      layer.cornerRadius = 0
     } else {
       // error and complete
+      // TODO: improve circle fill-in animation while resizing the view
       ovalPath = pathCompleted(ovalRect)
-      ovalPath.lineWidth = 14 + ((frame.size.width) * progress)
+      if progress < 1 {
+        // currently animating using line thickness for lack of knowledge
+        layer.cornerRadius = rect.size.height/2
+        ovalPath.lineWidth = 14 + ((frame.size.width) * progress)
+      }
+      else {
+        ovalPath.lineWidth = lineWidth
+        layer.cornerRadius = 0
+        if state == .error {
+          colorError.setFill()
+        }
+        else {
+          color.setFill()
+        }
+        ovalPath.fill()
+      }
     }
 
     if state == .error {
@@ -243,9 +262,17 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     if let iconView = icon as? UIView {
       auxIcon = iconView
       iconView.center = CGPoint(
-        x: CGFloat(Int(iconView.frame.size.width/2)),
-        y: CGFloat(Int(iconView.frame.size.height/2))
+        x: CGFloat(Int(frame.size.width/2)),
+        y: CGFloat(Int(frame.size.height/2))
       )
+      iconView.autoresizingMask = [
+        .flexibleWidth,
+        .flexibleHeight,
+        .flexibleTopMargin,
+        .flexibleLeftMargin,
+        .flexibleRightMargin,
+        .flexibleBottomMargin
+      ]
       addSubview(iconView)
     }
     icon.animate()

@@ -12,7 +12,7 @@ public protocol EPCSpinnerViewProtocol {
 
   var state: EPCSpinnerView.SpinnerState { get set }
 
-  @discardableResult func addLockIcon() -> EPCDrawnIconLock
+  func addIcon(_ view: UIView)
 
   func startAnimating()
 }
@@ -31,7 +31,7 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
     fatalError("\(#file) \(#function) not implemented")
   }
 
-  override init(frame: CGRect) {
+  override public init(frame: CGRect) {
     var fraBounds = frame
     fraBounds.origin = CGPoint.zero
     iconSpinner = EPCDrawnIconSpinner(frame: fraBounds)
@@ -60,7 +60,7 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
     }
   }
 
-  fileprivate func addIcon(_ view: UIView) {
+  public func addIcon(_ view: UIView) {
     view.center = CGPoint(
       x: CGFloat(Int(self.frame.size.width/2)),
       y: CGFloat(Int(self.frame.size.height/2))
@@ -84,13 +84,5 @@ public class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
 
   public func startAnimating() {
     iconSpinner.start()
-  }
-
-  @discardableResult public func addLockIcon() -> EPCDrawnIconLock {
-    var fra = CGRect.zero
-    fra.size = EPCDrawnIconLock.suggestedSize
-    let icon = EPCDrawnIconLock(frame: fra)
-    addIcon(icon)
-    return icon
   }
 }

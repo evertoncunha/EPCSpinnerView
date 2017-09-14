@@ -26,11 +26,12 @@ public class EPCDrawnIconComplete: UIView, EPCDrawnIconProtocol {
     fatalError("\(#file) \(#function) not implemented")
   }
 
-  override init(frame: CGRect) {
+  override public init(frame: CGRect) {
     super.init(frame: frame)
     backgroundColor = UIColor.clear
     clipsToBounds = false
     layer.masksToBounds = false
+    contentMode = .redraw
   }
 
   override public func draw(_ rect: CGRect) {
