@@ -22,7 +22,7 @@ A simple spinner view that animates to error or success states.
                        DESC
 
   s.homepage         = 'https://github.com/evertoncunha/EPCSpinnerView'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  # s.screenshots     = 'https://github.com/evertoncunha/EPCSpinnerView/blob/master/Example.gif?raw=true'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'evertoncunha' => 'ever.cunha@gmail.com' }
   s.source           = { :git => 'https://github.com/evertoncunha/EPCSpinnerView.git', :tag => s.version.to_s }

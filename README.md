@@ -9,6 +9,8 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+![Demo](https://github.com/evertoncunha/EPCSpinnerView/raw/master/Example.gif)
+
 ## Requirements
 
 iOS 8+
