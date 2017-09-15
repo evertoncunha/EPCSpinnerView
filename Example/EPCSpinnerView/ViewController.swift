@@ -13,12 +13,19 @@ class ViewController: UIViewController {
   
   let spinner = EPCSpinnerView()
   
+  let buildWithAutolayout = false
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     
-    spinner.frame = CGRect(x: 30, y: 30, width: 180, height: 180)
-    view.addSubview(spinner)
+    if buildWithAutolayout {
+      buildViewWithAutolayout()
+    }
+    else {
+      spinner.frame = CGRect(x: 30, y: 30, width: 180, height: 180)
+      view.addSubview(spinner)
+    }
     
     var fra = CGRect.zero
     fra.size = EPCDrawnIconLock.suggestedSize
@@ -26,6 +33,20 @@ class ViewController: UIViewController {
     spinner.addIcon(icon)
     
     spinner.startAnimating()
+  }
+  
+  func buildViewWithAutolayout() {
+    
+    spinner.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(spinner)
+    
+    let views = ["s":spinner]
+    
+    NSLayoutConstraint.activate([
+      NSLayoutConstraint.constraints(withVisualFormat: "H:|-30-[s(180)]", options: [], metrics: nil, views: views),
+      NSLayoutConstraint.constraints(withVisualFormat: "V:|-30-[s(180)]", options: [], metrics: nil, views: views)
+      ].flatMap {return $0})
+    
   }
   
   override func viewDidAppear(_ animated: Bool) {

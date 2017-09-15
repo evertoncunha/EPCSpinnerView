@@ -26,12 +26,20 @@ open class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
   }
 
   open let iconSpinner: EPCDrawnIconSpinner
+  
+  open static let suggestedSize = CGSize(width: 180, height: 180)
 
   required public init?(coder aDecoder: NSCoder) {
     fatalError("\(#file) \(#function) not implemented")
   }
 
   override public init(frame: CGRect) {
+    
+    var frame = frame
+    if frame.size.equalTo(CGSize.zero) {
+      frame.size = EPCSpinnerView.suggestedSize
+    }
+    
     var fraBounds = frame
     fraBounds.origin = CGPoint.zero
     iconSpinner = EPCDrawnIconSpinner(frame: fraBounds)

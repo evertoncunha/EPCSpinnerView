@@ -1,16 +1,16 @@
 PODS:
-  - EPCSpinnerView (0.1.0)
+  - EPCSpinnerView (0.1.1)
 
 DEPENDENCIES:
   - EPCSpinnerView (from `../`)
 
 EXTERNAL SOURCES:
   EPCSpinnerView:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  EPCSpinnerView: 740f6376456eaa459a6b5520d38fb3f5cbcf70ec
+  EPCSpinnerView: 1f89f53c3bcb90d005814a8d346ea301ca6ceb89
 
 PODFILE CHECKSUM: dc779263947a7f3f1dbbcdc2a83abf285233cd93
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.3.1
