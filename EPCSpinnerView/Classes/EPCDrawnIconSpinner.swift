@@ -31,38 +31,38 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     case error
   }
 
-  public var state: State = .loading
-
+  public var state: EPCDrawnIconSpinner.State = .loading
+  
   public var color = UIColor(red: 0.004, green: 0.553, blue: 0.416, alpha: 1.000) {
     didSet {
       setNeedsDisplay()
     }
   }
-
+  
   public var colorError = UIColor(red: 0.710, green: 0.341, blue: 0.345, alpha: 1.000) {
     didSet {
       setNeedsDisplay()
     }
   }
-
+  
   fileprivate var progress: CGFloat = 0
-
+  
   fileprivate var pathNumber: Int = 0
-
+  
   fileprivate var timer: Timer?
-
+  
   fileprivate let maxPaths: Int = 3
-
+  
   fileprivate var lineWidth: CGFloat = 11
-
+  
   fileprivate var time: TimeInterval!
-
+  
   fileprivate var auxIcon: UIView?
-
+  
   fileprivate let pStart: CGFloat = 200
-
+  
   fileprivate let lap: CGFloat = 360
-
+  
   override public var frame: CGRect {
     set(value) {
       let maxValue = max(value.size.width, value.size.height)
@@ -77,11 +77,11 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       return super.frame
     }
   }
-
+  
   required public init?(coder aDecoder: NSCoder) {
     fatalError("\(#file) \(#function) not implemented")
   }
-
+  
   public override func layoutSubviews() {
     super.layoutSubviews()
   }
@@ -90,19 +90,24 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     super.init(frame: frame)
     backgroundColor = UIColor.clear
     clipsToBounds = true
-    layer.masksToBounds = true
     contentMode = .redraw
   }
-
+  
   override public func draw(_ rect: CGRect) {
     super.draw(rect)
-    var ovalPath: UIBezierPath!
+    var ovalPath: UIBezierPath?
     let ovalRect = rect.insetBy(dx: lineWidth/2, dy: lineWidth/2)
     
+    if state == .error {
+      colorError.setStroke()
+    } else {
+      color.setStroke()
+    }
+    
     if state == .loading {
-
+      
       UIGraphicsGetCurrentContext()?.clear(rect)
-
+      
       if pathNumber == 0 {
         ovalPath = path0(ovalRect)
       } else if pathNumber == 1 {
@@ -110,20 +115,15 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       } else if pathNumber == 2 {
         ovalPath = path2(ovalRect)
       }
-
-      ovalPath.lineWidth = lineWidth
-      layer.cornerRadius = 0
+      
+      ovalPath?.lineWidth = lineWidth
     } else {
-      // error and complete
-      // TODO: improve circle fill-in animation while resizing the view
-      ovalPath = pathCompleted(ovalRect)
       if progress < 1 {
-        // currently animating using line thickness for lack of knowledge
-        layer.cornerRadius = rect.size.height/2
-        ovalPath.lineWidth = 14 + ((frame.size.width) * progress)
+        drawPathCompleted(ovalRect)
       }
       else {
-        ovalPath.lineWidth = lineWidth
+        ovalPath = pathCompleted(ovalRect)
+        ovalPath?.lineWidth = lineWidth
         layer.cornerRadius = 0
         if state == .error {
           colorError.setFill()
@@ -131,28 +131,23 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
         else {
           color.setFill()
         }
-        ovalPath.fill()
+        ovalPath?.fill()
       }
     }
-
-    if state == .error {
-      colorError.setStroke()
-    } else {
-      color.setStroke()
-    }
-    ovalPath.lineCapStyle = .round
-    ovalPath.stroke()
+    
+    ovalPath?.lineCapStyle = .round
+    ovalPath?.stroke()
   }
-
+  
   fileprivate func prop(_ val: CGFloat) -> CGFloat {
     return (frame.size.height * val)/180
   }
-
+  
   fileprivate func path0(_ ovalRect: CGRect) -> UIBezierPath {
-
+    
     let start = pStart + (10 * progress) // 200 -> 240
     let end = pStart + 10 + ((lap - 25) * progress) // -155 -> -170
-
+    
     let ovalPath = UIBezierPath()
     ovalPath.addArc(withCenter: CGPoint(x: ovalRect.midX, y: ovalRect.midY),
                     radius: ovalRect.width / 2,
@@ -160,26 +155,26 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
                     endAngle: end * CGFloat.pi/180, clockwise: true)
     return ovalPath
   }
-
+  
   fileprivate func path1(_ ovalRect: CGRect) -> UIBezierPath {
-
+    
     let start = pStart + 10 + (50 * progress) // -165 -> -135
     let end = pStart + 10 + (lap - 25) + (10 * progress) // -155 -> -170
-
+    
     let ovalPath = UIBezierPath()
     ovalPath.addArc(withCenter: CGPoint(x: ovalRect.midX, y: ovalRect.midY),
                     radius: ovalRect.width / 2,
                     startAngle: start * CGFloat.pi/180,
                     endAngle: end * CGFloat.pi/180, clockwise: true)
     return ovalPath
-
+    
   }
-
+  
   fileprivate func path2(_ ovalRect: CGRect) -> UIBezierPath {
-
+    
     let start = pStart + 10 + 50 + (300 * progress) // -165 -> -135
     let end = pStart + 10 + (lap - 25) + 10 + (10 * progress) // -155 -> -170
-
+    
     let ovalPath = UIBezierPath()
     ovalPath.addArc(withCenter: CGPoint(x: ovalRect.midX, y: ovalRect.midY),
                     radius: ovalRect.width / 2,
@@ -187,7 +182,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
                     endAngle: end * CGFloat.pi/180, clockwise: true)
     return ovalPath
   }
-
+  
   fileprivate func refresh() {
     if pathNumber == 0 {
       time = 0.003
@@ -204,9 +199,14 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
                                  repeats: true)
     timer?.fire()
   }
-
+  
   @objc fileprivate func updateProgress() {
     progress += 0.015
+    
+    if state == .completed || state == .error {
+      progress += 0.01
+    }
+    
     if progress >= 1 {
       progress = 0
       pathNumber += 1
@@ -227,11 +227,11 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     }
     setNeedsDisplay()
   }
-
+  
   fileprivate func pathCompleted(_ ovalRect: CGRect) -> UIBezierPath {
     let start = pStart
     let end = pStart + lap
-
+    
     let ovalPath = UIBezierPath()
     ovalPath.addArc(withCenter: CGPoint(x: ovalRect.midX, y: ovalRect.midY),
                     radius: ovalRect.width / 2,
@@ -239,7 +239,26 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
                     endAngle: end * CGFloat.pi/180, clockwise: true)
     return ovalPath
   }
-
+  
+  fileprivate func drawPathCompleted(_ ovalRect: CGRect) {
+    
+    var size: CGFloat = ovalRect.size.width
+    
+    var current = size*(1-progress)
+    
+    var pos: CGFloat = lineWidth/2
+    
+    while size > current {
+      let ovalPath = UIBezierPath(ovalIn: CGRect(x: pos, y: pos, width: size, height: size))
+      ovalPath.lineCapStyle = .round
+      ovalPath.lineWidth = lineWidth
+      ovalPath.stroke()
+      let decr = lineWidth/2
+      size -= decr
+      pos += decr/2
+    }
+  }
+  
   fileprivate func drawCompleteIcon() {
     var fra = CGRect.zero
     fra.size = CGSize(
@@ -248,7 +267,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     )
     addIcon(EPCDrawnIconComplete(frame: fra))
   }
-
+  
   fileprivate func drawErrorIcon() {
     var fra = CGRect.zero
     fra.size = CGSize(
@@ -257,7 +276,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     )
     addIcon(EPCDrawnIconError(frame: fra))
   }
-
+  
   fileprivate func addIcon(_ icon: EPCDrawnIconProtocol) {
     if let iconView = icon as? UIView {
       auxIcon = iconView
@@ -277,42 +296,42 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     }
     icon.animate()
   }
-
+  
   // MARK: - Public
-
+  
   public func setCompleted() {
     auxIcon?.removeFromSuperview()
     timer?.invalidate()
     state = .completed
-
+    
     pathNumber = 0
     progress = 0
-
+    
     refresh()
-
+    
     setNeedsDisplay()
   }
-
+  
   public func setError() {
     auxIcon?.removeFromSuperview()
     timer?.invalidate()
     state = .error
-
+    
     pathNumber = 0
     progress = 0
-
+    
     refresh()
-
+    
     setNeedsDisplay()
   }
-
+  
   public func start() {
     auxIcon?.removeFromSuperview()
     progress = 0
     pathNumber = 0
     refresh()
   }
-
+  
   public func stop() {
     timer?.invalidate()
   }
