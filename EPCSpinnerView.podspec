@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'EPCSpinnerView'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'A simple spinner view that animates to error or success states.'
 
 # This description is used to generate tags and improve search results.
@@ -22,21 +22,14 @@ A simple spinner view that animates to error or success states. Created mostly f
                        DESC
 
   s.homepage         = 'https://github.com/evertoncunha/EPCSpinnerView'
-  # s.screenshots     = 'https://github.com/evertoncunha/EPCSpinnerView/blob/master/Example.gif?raw=true'
+  s.screenshots     = 'https://github.com/evertoncunha/EPCSpinnerView/blob/master/Example.gif?raw=true'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'evertoncunha' => 'ever.cunha@gmail.com' }
   s.source           = { :git => 'https://github.com/evertoncunha/EPCSpinnerView.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/evertoncunha'
+  s.social_media_url = 'https://twitter.com/evertoncunha'
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'EPCSpinnerView/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'EPCSpinnerView' => ['EPCSpinnerView/Assets/*.png']
-  # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end

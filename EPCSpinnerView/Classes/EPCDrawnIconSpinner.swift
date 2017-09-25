@@ -14,7 +14,7 @@ public protocol EPCDrawnIconSpinnerProtocol {
 
   var colorError: UIColor { get set }
 
-  func setCompleted()
+  func setSuccess()
 
   func setError()
 
@@ -27,7 +27,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
 
   public enum State: Int {
     case loading
-    case completed
+    case success
     case error
   }
 
@@ -57,11 +57,13 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
   
   fileprivate var time: TimeInterval!
   
-  fileprivate var auxIcon: UIView?
-  
   fileprivate let pStart: CGFloat = 200
   
   fileprivate let lap: CGFloat = 360
+  
+  fileprivate var iconSuccess: (UIView & EPCDrawnIconProtocol)!
+  
+  fileprivate var iconError: (UIView & EPCDrawnIconProtocol)!
   
   override public var frame: CGRect {
     set(value) {
@@ -91,6 +93,11 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     backgroundColor = UIColor.clear
     clipsToBounds = true
     contentMode = .redraw
+    
+    drawSuccessIcon()
+    drawErrorIcon()
+    iconError.isHidden = true
+    iconSuccess.isHidden = false
   }
   
   override public func draw(_ rect: CGRect) {
@@ -203,7 +210,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
   @objc fileprivate func updateProgress() {
     progress += 0.015
     
-    if state == .completed || state == .error {
+    if state == .success || state == .error {
       progress += 0.01
     }
     
@@ -213,14 +220,16 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       if pathNumber >= maxPaths {
         pathNumber = 0
       }
-      if state == .completed {
+      if state == .success {
         progress = 1
         timer?.invalidate()
-        drawCompleteIcon()
+        iconSuccess.isHidden = false
+        iconSuccess.animate()
       } else if state == .error {
         progress = 1
         timer?.invalidate()
-        drawErrorIcon()
+        iconError.isHidden = false
+        iconError.animate()
       } else {
         refresh()
       }
@@ -244,7 +253,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     
     var size: CGFloat = ovalRect.size.width
     
-    var current = size*(1-progress)
+    let current = size*(1-progress)
     
     var pos: CGFloat = lineWidth/2
     
@@ -259,13 +268,15 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     }
   }
   
-  fileprivate func drawCompleteIcon() {
+  fileprivate func drawSuccessIcon() {
     var fra = CGRect.zero
     fra.size = CGSize(
-      width: prop(EPCDrawnIconComplete.suggestedSize.width),
-      height: prop(EPCDrawnIconComplete.suggestedSize.height)
+      width: prop(EPCDrawnIconSuccess.suggestedSize.width),
+      height: prop(EPCDrawnIconSuccess.suggestedSize.height)
     )
-    addIcon(EPCDrawnIconComplete(frame: fra))
+    let ico = EPCDrawnIconSuccess(frame: fra)
+    iconSuccess = ico
+    addIcon(ico)
   }
   
   fileprivate func drawErrorIcon() {
@@ -274,35 +285,33 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       width: prop(EPCDrawnIconError.suggestedSize.width),
       height: prop(EPCDrawnIconError.suggestedSize.height)
     )
-    addIcon(EPCDrawnIconError(frame: fra))
+    let ico = EPCDrawnIconError(frame: fra)
+    iconError = ico
+    addIcon(ico)
   }
   
-  fileprivate func addIcon(_ icon: EPCDrawnIconProtocol) {
-    if let iconView = icon as? UIView {
-      auxIcon = iconView
-      iconView.center = CGPoint(
-        x: CGFloat(Int(frame.size.width/2)),
-        y: CGFloat(Int(frame.size.height/2))
-      )
-      iconView.autoresizingMask = [
-        .flexibleWidth,
-        .flexibleHeight,
-        .flexibleTopMargin,
-        .flexibleLeftMargin,
-        .flexibleRightMargin,
-        .flexibleBottomMargin
-      ]
-      addSubview(iconView)
-    }
-    icon.animate()
+  fileprivate func addIcon(_ icon: UIView & EPCDrawnIconProtocol) {
+    icon.center = CGPoint(
+      x: CGFloat(Int(frame.size.width/2)),
+      y: CGFloat(Int(frame.size.height/2))
+    )
+    icon.autoresizingMask = [
+      .flexibleWidth,
+      .flexibleHeight,
+      .flexibleTopMargin,
+      .flexibleLeftMargin,
+      .flexibleRightMargin,
+      .flexibleBottomMargin
+    ]
+    addSubview(icon)
   }
   
   // MARK: - Public
   
-  public func setCompleted() {
-    auxIcon?.removeFromSuperview()
+  public func setSuccess() {
+    iconError.isHidden = true
     timer?.invalidate()
-    state = .completed
+    state = .success
     
     pathNumber = 0
     progress = 0
@@ -313,7 +322,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
   }
   
   public func setError() {
-    auxIcon?.removeFromSuperview()
+    iconSuccess.isHidden = true
     timer?.invalidate()
     state = .error
     
@@ -326,7 +335,8 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
   }
   
   public func start() {
-    auxIcon?.removeFromSuperview()
+    iconError.isHidden = true
+    iconSuccess.isHidden = true
     progress = 0
     pathNumber = 0
     refresh()

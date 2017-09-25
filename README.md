@@ -14,6 +14,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 ## Requirements
 
 iOS 8+
+Xcode 9
 
 ## Installation
 
@@ -23,9 +24,6 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod 'EPCSpinnerView'
 ```
-## Known Issues
-
-ø There's an animation glitch if you resize the view while it is filling the circle to complete or error states.
 
 ## Author
 

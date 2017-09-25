@@ -63,7 +63,7 @@ open class EPCSpinnerView: UIView, EPCSpinnerViewProtocol {
         iconSpinner.state = .loading
         iconSpinner.start()
       case .success:
-        iconSpinner.setCompleted()
+        iconSpinner.setSuccess()
       }
     }
   }

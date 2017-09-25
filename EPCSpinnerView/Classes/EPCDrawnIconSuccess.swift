@@ -1,12 +1,12 @@
 //
-//  DrawnIconComplete.swift
+//  DrawnIconSuccess.swift
 //
 //  Created by Everton on 24/08/17.
 //
 
 import UIKit
 
-public class EPCDrawnIconComplete: UIView, EPCDrawnIconProtocol {
+public class EPCDrawnIconSuccess: UIView, EPCDrawnIconProtocol {
 
   public static let suggestedSize = CGSize(width: 95, height: 78)
 
@@ -92,6 +92,8 @@ public class EPCDrawnIconComplete: UIView, EPCDrawnIconProtocol {
   // MARK: - Public
 
   public func animate() {
+    step = 0
+    progress = 0
     refresh()
   }
 }
