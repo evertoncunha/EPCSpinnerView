@@ -13,16 +13,27 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-iOS 8+
+iOS 8
 Xcode 9
+Swift 4
+
 
 ## Installation
 
-EPCSpinnerView is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+**We'll try to keep the API as stable as possible, but breaking API changes can occur.**
 
-```ruby
+### CocoaPods
+
+Podfile
+```
 pod 'EPCSpinnerView'
+```
+
+### Carthage
+
+Cartfile
+```
+github "evertoncunha/EPCSpinnerView"
 ```
 
 ## Author

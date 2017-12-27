@@ -7,30 +7,32 @@
 import UIKit
 
 public protocol EPCDrawnIconSpinnerProtocol {
-
+  
   var state: EPCDrawnIconSpinner.State { get set }
-
+  
   var color: UIColor { get set }
-
+  
   var colorError: UIColor { get set }
-
+  
+  var speed: CGFloat { get set }
+  
   func setSuccess()
-
+  
   func setError()
-
+  
   func start()
-
+  
   func stop()
 }
 
 public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
-
+  
   public enum State: Int {
     case loading
     case success
     case error
   }
-
+  
   public var state: EPCDrawnIconSpinner.State = .loading
   
   public var color = UIColor(red: 0.004, green: 0.553, blue: 0.416, alpha: 1.000) {
@@ -44,6 +46,8 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
       setNeedsDisplay()
     }
   }
+  
+  public var speed: CGFloat = 1
   
   fileprivate var progress: CGFloat = 0
   
@@ -208,7 +212,7 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
   }
   
   @objc fileprivate func updateProgress() {
-    progress += 0.015
+    progress += (0.015 * speed)
     
     if state == .success || state == .error {
       progress += 0.01
@@ -346,3 +350,4 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
     timer?.invalidate()
   }
 }
+
