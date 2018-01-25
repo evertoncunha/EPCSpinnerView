@@ -23,6 +23,8 @@ public protocol EPCDrawnIconSpinnerProtocol {
   func start()
   
   func stop()
+  
+  func setProgressCompleted()
 }
 
 public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
@@ -348,6 +350,13 @@ public class EPCDrawnIconSpinner: UIView, EPCDrawnIconSpinnerProtocol {
   
   public func stop() {
     timer?.invalidate()
+  }
+  
+  public func setProgressCompleted() {
+    timer?.invalidate()
+    pathNumber = 1
+    progress = 0.4
+    setNeedsDisplay()
   }
 }
 
